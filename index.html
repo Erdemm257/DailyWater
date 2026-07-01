@@ -1,0 +1,288 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daily Water</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Su Takip">
+    <link rel="apple-touch-icon" href="icon.png">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column; /* Dikey dizilim için en önemli komut */
+            align-items: center; /* Ortalamak için */
+            justify-content: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+            .header h2 {
+                margin: 0;
+                font-size: 20px;
+                letter-spacing: 2px;
+                color: #ffffff;
+                font-weight: 700;
+            }
+
+            .header p {
+                margin: 5px 0 0 0; /* Üstten 5px boşluk, diğerlerini sıfırla */
+                font-size: 12px;
+                color: #64748b;
+                text-align: center; /* Yazıyı ortalar */
+                width: 100%; /* Satırı tam kaplayıp alt satıra zorlar */
+            }
+
+            .header h2 {
+                margin: 0;
+                font-size: 20px;
+                letter-spacing: 2px;
+                color: #ffffff;
+                font-weight: 700;
+            }
+
+        .circle-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 10px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: radial-gradient(circle, #111827 70%, #0f172a 100%);
+            box-shadow: 0 0 0 6px #1e293b, 0 0 20px rgba(56, 189, 248, 0.2);
+            border: 4px solid #38bdf8;
+        }
+
+        .circle-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .circle-target {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 6px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .btn-quick {
+            background-color: #111827;
+            color: #94a3b8;
+            border: 1px solid #1e293b;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .btn-quick:active {
+                background-color: #1e293b;
+                color: #38bdf8;
+                border-color: #38bdf8;
+            }
+
+        .custom-section {
+            background-color: #111827;
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid #1e293b;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #1e293b;
+            background-color: #090d16;
+            color: white;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .control-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-action {
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-ekle {
+            background-color: #0284c7;
+            color: white;
+        }
+
+            .btn-ekle:active {
+                background-color: #0369a1;
+            }
+
+        .btn-cikart {
+            background-color: #334155;
+            color: #f1f5f9;
+            border: 1px solid #475569;
+        }
+
+            .btn-cikart:active {
+                background-color: #475569;
+            }
+
+        .btn-save {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+
+            .btn-save:active {
+                background-color: #0369a1;
+            }
+
+        .history-section {
+            margin-top: 10px;
+        }
+
+        .history-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #475569;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        li {
+            background-color: #111827;
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #1e293b;
+            font-size: 14px;
+        }
+
+            li .date {
+                color: #94a3b8;
+                font-weight: 500;
+            }
+
+            li .amount {
+                color: #ffffff;
+                font-weight: 700;
+            }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>DAILY WATER</h2>
+            <p>by erddm</p>
+        </div>
+
+        <div class="circle-container">
+            <div class="circle-amount" id="toplamSu">0.0 Litre</div>
+            <div class="circle-target" id="toplamSuMl">0 mL</div>
+        </div>
+
+        <div class="btn-grid">
+            <button class="btn-quick" onclick="suIslem(500, 'ekle')">500 ML</button>
+            <button class="btn-quick" onclick="suIslem(1000, 'ekle')">1.0 L</button>
+            <button class="btn-quick" onclick="suIslem(1500, 'ekle')">1.5 L</button>
+        </div>
+
+        <div class="custom-section">
+            <div class="input-wrapper">
+                <input type="number" id="customInput" placeholder="Özel miktar (ml)..." inputmode="numeric">
+            </div>
+            <div class="control-buttons">
+                <button class="btn-action btn-ekle" onclick="customSuIslem('ekle')">EKLE</button>
+                <button class="btn-action btn-cikart" onclick="customSuIslem('cikart')">ÇIKART</button>
+            </div>
+        </div>
+
+        <button class="btn-save" onclick="gunuKaydet()">GÜNÜ KAYDET</button>
+
+        <div class="user-section" style="margin-bottom: 15px;">
+            <input type="text" id="userInput" placeholder="Kullanıcı adını gir..."
+                   style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #1e293b; background: #111827; color: white;">
+        </div>
+
+        <div class="history-section">
+            <div class="history-title">Geçmiş Kayıtlar</div>
+            <ul id="gecmisListe"></ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
