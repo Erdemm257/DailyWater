@@ -12,25 +12,27 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let bugunkuToplam = 0;
-
 const toplamSuElement = document.getElementById('toplamSu');
 const toplamSuMlElement = document.getElementById('toplamSuMl');
 const gecmisListeElement = document.getElementById('gecmisListe');
-const userInput = document.getElementById('userInput'); // HTML'deki inputun ID'si bu olmalı
+const userInput = document.getElementById('userInput');
 
-// Uygulama açıldığında kaydedilen kullanıcıyı yükle
+// 1. AÇILIŞTA HAFIZADAN YÜKLEME
 window.onload = () => {
     const savedUser = localStorage.getItem('suTakipUser') || 'Misafir';
+    const savedSu = parseFloat(localStorage.getItem('bugunkuSu')) || 0;
+    
     if(userInput) userInput.value = savedUser;
+    bugunkuToplam = savedSu;
+    
+    uiGuncelle();
     gecmisiYukle();
 };
 
-// Koleksiyon adını dinamik belirleyen fonksiyon
 function getCollectionName() {
     return userInput ? (userInput.value || 'Misafir') : 'Misafir';
 }
 
-// Kullanıcı değiştiğinde listeyi tazele
 if(userInput) {
     userInput.addEventListener('input', () => {
         localStorage.setItem('suTakipUser', userInput.value);
@@ -50,6 +52,7 @@ function suIslem(ml, tip) {
     } else if (tip === 'cikart') {
         bugunkuToplam = Math.max(0, bugunkuToplam - ml);
     }
+    localStorage.setItem('bugunkuSu', bugunkuToplam); // HAFIZAYA YAZ
     uiGuncelle();
 }
 
@@ -64,6 +67,7 @@ function customSuIslem(tip) {
     } else if (tip === 'cikart') {
         bugunkuToplam = Math.max(0, bugunkuToplam - miktar);
     }
+    localStorage.setItem('bugunkuSu', bugunkuToplam); // HAFIZAYA YAZ
     uiGuncelle();
     input.value = '';
 }
@@ -77,7 +81,6 @@ function gunuKaydet() {
     const bugun = new Date().toLocaleDateString('tr-TR');
     const litreDegeri = parseFloat((bugunkuToplam / 1000).toFixed(3));
 
-    // Artık koleksiyon ismi getCollectionName() ile seçiliyor
     db.collection(getCollectionName()).doc(bugun).set({
         tarih: bugun,
         miktar: litreDegeri,
@@ -86,8 +89,10 @@ function gunuKaydet() {
     .then(() => {
         alert("Bugünün verisi kaydedildi.");
         bugunkuToplam = 0;
+        localStorage.setItem('bugunkuSu', 0); // HAFIZAYI SIFIRLA
         uiGuncelle();
-        gecmisiYukle();
+        // Gecikme ile verinin işlenmesini bekliyoruz
+        setTimeout(() => { gecmisiYukle(); }, 500);
     })
     .catch((error) => {
         console.error("Hata: ", error);
@@ -96,8 +101,6 @@ function gunuKaydet() {
 
 function gecmisiYukle() {
     gecmisListeElement.innerHTML = "";
-    
-    // Koleksiyon ismine göre verileri çekiyoruz
     db.collection(getCollectionName()).orderBy("timestamp", "desc").limit(30).get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -106,10 +109,5 @@ function gecmisiYukle() {
             li.innerHTML = `<span class="date">${data.tarih}</span> <span class="amount">${data.miktar} L</span>`;
             gecmisListeElement.appendChild(li);
         });
-    })
-    .catch((error) => {
-        console.error("Geçmiş yüklenemedi: ", error);
     });
 }
-
-gecmisiYukle();
