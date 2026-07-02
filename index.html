@@ -79,6 +79,55 @@
             background: radial-gradient(circle, #111827 70%, #0f172a 100%);
             box-shadow: 0 0 0 6px #1e293b, 0 0 20px rgba(56, 189, 248, 0.2);
             border: 4px solid #38bdf8;
+            overflow: hidden;
+        }
+        .circle-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8); /* Su dolunca yazılar net okunsun diye gölge */
+        }
+
+        /* ---- YENİ: SU DALGASI EFEKTİ ---- */
+        .water-wave {
+            position: absolute;
+            left: 50%;
+            width: 440px; /* Daireden büyük olmalı ki dalga boyu oluşsun */
+            height: 440px;
+            bottom: -550px; /* Başlangıçta tamamen boş (Görünmez) */
+            transform: translateX(-50%);
+            z-index: 1;
+            transition: bottom 1s cubic-bezier(0.4, 0, 0.2, 1); /* Yükselme animasyonu yumuşak olsun */
+        }
+
+        .layer1 {
+            background: rgba(56, 189, 248, 0.5); /* En açık mavi */
+            border-radius: 40%;
+            animation: spin 6s linear infinite;
+        }
+
+        .layer2 {
+            background: rgba(2, 132, 199, 0.6); /* Orta mavi */
+            border-radius: 43%;
+            animation: spin 8s linear infinite;
+        }
+
+        .layer3 {
+            background: rgba(3, 105, 161, 0.8); /* En koyu mavi arka plan */
+            border-radius: 46%;
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: translateX(-50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translateX(-50%) rotate(360deg);
+            }
         }
 
         .circle-amount {
@@ -318,8 +367,14 @@
         </div>
 
         <div class="circle-container">
-            <div class="circle-amount" id="toplamSu">0.0 Litre</div>
-            <div class="circle-target" id="toplamSuMl">0 mL</div>
+            <div class="water-wave layer3"></div>
+            <div class="water-wave layer2"></div>
+            <div class="water-wave layer1"></div>
+
+            <div class="circle-content">
+                <div class="circle-amount" id="toplamSu">0.0 Litre</div>
+                <div class="circle-target" id="toplamSuMl">0 mL</div>
+            </div>
         </div>
 
         <div class="btn-grid">
@@ -360,8 +415,8 @@
                     <input type="text" id="userInput" placeholder="Geçmişi görmek için isim gir..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #111827; color: white; box-sizing: border-box; outline: none;">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 0.85rem; margin-bottom: 8px; color: #94a3b8;">Günlük Hedef (Litre)</label>
-                    <input type="number" id="hedefInput" placeholder="Örn: 2.5" step="0.1" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #111827; color: white; box-sizing: border-box; outline: none;">
+                    <label style="display: block; font-size: 0.85rem; margin-bottom: 8px; color: #94a3b8;">Günlük Hedef (mL)</label>
+                    <input type="number" id="hedefInput" placeholder="Örn: 2500" step="100" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #111827; color: white; box-sizing: border-box; outline: none;">
                 </div>
             </div>
         </div>

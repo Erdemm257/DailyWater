@@ -17,12 +17,15 @@ const toplamSuMlElement = document.getElementById('toplamSuMl');
 const gecmisListeElement = document.getElementById('gecmisListe');
 const userInput = document.getElementById('userInput');
 const hedefInput = document.getElementById('hedefInput');
+const settingsIcon = document.getElementById('settingsIcon');
+const settingsOverlay = document.getElementById('settingsOverlay');
+const closeSettings = document.getElementById('closeSettings');
 
 // 1. AÇILIŞTA HAFIZADAN YÜKLEME
 window.onload = () => {
     const savedUser = localStorage.getItem('suTakipUser') || 'Misafir';
     const savedSu = parseFloat(localStorage.getItem('bugunkuSu')) || 0;
-    const savedHedef = localStorage.getItem('suHedef') || 2.5; // Varsayılan hedef 2.5L
+    const savedHedef = localStorage.getItem('suHedef') || 2500; 
 
     if(userInput) userInput.value = savedUser;
     if(hedefInput) hedefInput.value = savedHedef;
@@ -32,10 +35,11 @@ window.onload = () => {
     gecmisiYukle();
 };
 
+// Hedef değiştiğinde suyu anlık güncelle
 if(hedefInput) {
     hedefInput.addEventListener('input', () => {
         localStorage.setItem('suHedef', hedefInput.value);
-        // İleride dairesel barı güncelleyecek fonksiyon buraya eklenecek
+        uiGuncelle(); 
     });
 }
 
@@ -51,9 +55,28 @@ if(userInput) {
 }
 
 function uiGuncelle() {
+    // 1. Yazıları Güncelle
     const litreGosterim = (Math.floor(bugunkuToplam / 100) / 10).toFixed(1);
     toplamSuElement.innerText = litreGosterim + " Litre";
     toplamSuMlElement.innerText = bugunkuToplam + " mL";
+
+    // 2. SU ANİMASYONU HESAPLAMASI
+    const hedefMl = parseInt(hedefInput ? hedefInput.value : 2500) || 2500;
+    
+    // Yüzdeyi 0 ile 1 arasında sınırla
+    let yuzde = bugunkuToplam / hedefMl;
+    if (yuzde > 1) yuzde = 1; 
+    if (yuzde < 0) yuzde = 0;
+    
+    // YENİ MATEMATİK: 
+    // -550px tamamen boş (aşağıda), -150px tamamen dolu (yukarıda)
+    // -550 + (yuzde * 400) formülü tam olarak 0'dan 100'e yayılmasını sağlar
+    const bottomValue = -550 + (yuzde * 400);
+    
+    const waves = document.querySelectorAll('.water-wave');
+    waves.forEach(wave => {
+        wave.style.bottom = bottomValue + "px";
+    });
 }
 
 function suIslem(ml, tip) {
@@ -62,14 +85,13 @@ function suIslem(ml, tip) {
     } else if (tip === 'cikart') {
         bugunkuToplam = Math.max(0, bugunkuToplam - ml);
     }
-    localStorage.setItem('bugunkuSu', bugunkuToplam); // HAFIZAYA YAZ
+    localStorage.setItem('bugunkuSu', bugunkuToplam);
     uiGuncelle();
 }
 
 function customSuIslem(tip) {
     const input = document.getElementById('customInput');
     const miktar = parseInt(input.value);
-    
     if (isNaN(miktar) || miktar <= 0) return;
 
     if (tip === 'ekle') {
@@ -77,7 +99,7 @@ function customSuIslem(tip) {
     } else if (tip === 'cikart') {
         bugunkuToplam = Math.max(0, bugunkuToplam - miktar);
     }
-    localStorage.setItem('bugunkuSu', bugunkuToplam); // HAFIZAYA YAZ
+    localStorage.setItem('bugunkuSu', bugunkuToplam);
     uiGuncelle();
     input.value = '';
 }
@@ -99,14 +121,11 @@ function gunuKaydet() {
     .then(() => {
         alert("Bugünün verisi kaydedildi.");
         bugunkuToplam = 0;
-        localStorage.setItem('bugunkuSu', 0); // HAFIZAYI SIFIRLA
+        localStorage.setItem('bugunkuSu', 0);
         uiGuncelle();
-        // Gecikme ile verinin işlenmesini bekliyoruz
         setTimeout(() => { gecmisiYukle(); }, 500);
     })
-    .catch((error) => {
-        console.error("Hata: ", error);
-    });
+    .catch((error) => console.error("Hata: ", error));
 }
 
 function gecmisiYukle() {
@@ -116,28 +135,21 @@ function gecmisiYukle() {
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             const li = document.createElement('li');
-            li.innerHTML = `<span class="date">${data.tarih}</span> <span class="amount">${data.miktar} L</span>`;
+            li.innerHTML = `<span class="date">${data.tarih}</span> <span class="amount">${data.miktar.toString().replace('.', ',')} L</span>`;
             gecmisListeElement.appendChild(li);
         });
     });
 }
 
 // Ayarlar Menüsü Kontrolleri
-const settingsIcon = document.getElementById('settingsIcon');
-const settingsOverlay = document.getElementById('settingsOverlay');
-const closeSettings = document.getElementById('closeSettings');
-
-// İkona basınca aç
 settingsIcon.addEventListener('click', () => {
     settingsOverlay.style.display = 'flex';
 });
 
-// Çarpıya basınca kapat
 closeSettings.addEventListener('click', () => {
     settingsOverlay.style.display = 'none';
 });
 
-// Arka plan blurlu alana basınca kapat
 settingsOverlay.addEventListener('click', (e) => {
     if (e.target === settingsOverlay) {
         settingsOverlay.style.display = 'none';
