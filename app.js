@@ -73,11 +73,11 @@ function uiGuncelle() {
     const circleContainer = document.querySelector('.circle-container');
 
     // 2. Su görünürlüğü kontrolü (0 ML iken tamamen gizle)
-    if (bugunkuToplam === 0) {
-        waves.forEach(wave => wave.style.display = 'none');
-    } else {
-        waves.forEach(wave => wave.style.display = 'block');
-    }
+    //if (bugunkuToplam === 0) {
+    //    waves.forEach(wave => wave.style.display = 'none');
+    //} else {
+    //    waves.forEach(wave => wave.style.display = 'block');
+    //}
 
     // 3. Yükseklik hesaplaması (Milimetrik artış)
     let yuzde = bugunkuToplam / hedefMl;
@@ -185,3 +185,4 @@ settingsOverlay.addEventListener('click', (e) => {
         settingsOverlay.style.display = 'none';
     }
 });
+
