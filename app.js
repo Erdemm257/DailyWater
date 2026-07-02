@@ -16,18 +16,28 @@ const toplamSuElement = document.getElementById('toplamSu');
 const toplamSuMlElement = document.getElementById('toplamSuMl');
 const gecmisListeElement = document.getElementById('gecmisListe');
 const userInput = document.getElementById('userInput');
+const hedefInput = document.getElementById('hedefInput');
 
 // 1. AÇILIŞTA HAFIZADAN YÜKLEME
 window.onload = () => {
     const savedUser = localStorage.getItem('suTakipUser') || 'Misafir';
     const savedSu = parseFloat(localStorage.getItem('bugunkuSu')) || 0;
-    
+    const savedHedef = localStorage.getItem('suHedef') || 2.5; // Varsayılan hedef 2.5L
+
     if(userInput) userInput.value = savedUser;
+    if(hedefInput) hedefInput.value = savedHedef;
     bugunkuToplam = savedSu;
     
     uiGuncelle();
     gecmisiYukle();
 };
+
+if(hedefInput) {
+    hedefInput.addEventListener('input', () => {
+        localStorage.setItem('suHedef', hedefInput.value);
+        // İleride dairesel barı güncelleyecek fonksiyon buraya eklenecek
+    });
+}
 
 function getCollectionName() {
     return userInput ? (userInput.value || 'Misafir') : 'Misafir';
@@ -79,7 +89,7 @@ function gunuKaydet() {
     }
 
     const bugun = new Date().toLocaleDateString('tr-TR');
-    const litreDegeri = parseFloat((bugunkuToplam / 1000).toFixed(3));
+    const litreDegeri = parseFloat((bugunkuToplam / 1000).toFixed(1));
 
     db.collection(getCollectionName()).doc(bugun).set({
         tarih: bugun,
@@ -111,3 +121,25 @@ function gecmisiYukle() {
         });
     });
 }
+
+// Ayarlar Menüsü Kontrolleri
+const settingsIcon = document.getElementById('settingsIcon');
+const settingsOverlay = document.getElementById('settingsOverlay');
+const closeSettings = document.getElementById('closeSettings');
+
+// İkona basınca aç
+settingsIcon.addEventListener('click', () => {
+    settingsOverlay.style.display = 'flex';
+});
+
+// Çarpıya basınca kapat
+closeSettings.addEventListener('click', () => {
+    settingsOverlay.style.display = 'none';
+});
+
+// Arka plan blurlu alana basınca kapat
+settingsOverlay.addEventListener('click', (e) => {
+    if (e.target === settingsOverlay) {
+        settingsOverlay.style.display = 'none';
+    }
+});
