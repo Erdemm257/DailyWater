@@ -55,15 +55,12 @@ if(userInput) {
 }
 
 function uiGuncelle() {
-    // 1. Yazıları Güncelle
     const litreGosterim = (Math.floor(bugunkuToplam / 100) / 10).toFixed(1);
     if(toplamSuElement) toplamSuElement.innerText = litreGosterim + " Litre";
     if(toplamSuMlElement) toplamSuMlElement.innerText = bugunkuToplam + " mL";
 
-    // Hedef değerini al
     const hedefMl = parseInt(hedefInput ? hedefInput.value : 2500) || 2500;
     
-    // Hedef gösterge metnini güncelle (Eğer HTML'e eklediysen)
     const hedefGosterge = document.getElementById('hedefGosterge');
     if (hedefGosterge) {
         hedefGosterge.innerText = "Hedef: " + hedefMl + " ML";
@@ -72,21 +69,16 @@ function uiGuncelle() {
     const waves = document.querySelectorAll('.water-wave');
     const circleContainer = document.querySelector('.circle-container');
 
-    // 2. Su görünürlüğü kontrolü (0 ML iken tamamen gizle)
     //if (bugunkuToplam === 0) {
     //    waves.forEach(wave => wave.style.display = 'none');
     //} else {
     //    waves.forEach(wave => wave.style.display = 'block');
     //}
 
-    // 3. Yükseklik hesaplaması (Milimetrik artış)
     let yuzde = bugunkuToplam / hedefMl;
     if (yuzde > 1) yuzde = 1;
     if (yuzde < 0) yuzde = 0;
 
-    // Dalga 440px, Daire 220px. 
-    // -450px: Dalganın en dibi (Su yok)
-    // -220px: Dalganın tam tepesi (Tam dolu)
     const startBottom = -450;
     const endBottom = -220;
     const bottomValue = startBottom + (yuzde * (endBottom - startBottom));
@@ -95,14 +87,11 @@ function uiGuncelle() {
         wave.style.bottom = bottomValue + "px";
     });
 
-    // 4. Hedef Kontrolü ve Çerçeve Rengi Değişimi
     if (circleContainer) {
         if (bugunkuToplam > 0 && bugunkuToplam >= hedefMl) {
-            // Hedefe ulaşıldı: Çerçeve ve gölge yeşil olur, su kendi renginde kalır
             circleContainer.style.borderColor = "#22c55e";
             circleContainer.style.boxShadow = "0 0 0 6px #1e293b, 0 0 20px rgba(34, 197, 94, 0.4)";
         } else {
-            // Hedef altı: Standart mavi
             circleContainer.style.borderColor = "#38bdf8";
             circleContainer.style.boxShadow = "0 0 0 6px #1e293b, 0 0 20px rgba(56, 189, 248, 0.2)";
         }
@@ -159,6 +148,7 @@ function gunuKaydet() {
 }
 
 function gecmisiYukle() {
+    if(!gecmisListeElement) return;
     gecmisListeElement.innerHTML = "";
     db.collection(getCollectionName()).orderBy("timestamp", "desc").limit(30).get()
     .then((querySnapshot) => {
@@ -185,4 +175,3 @@ settingsOverlay.addEventListener('click', (e) => {
         settingsOverlay.style.display = 'none';
     }
 });
-

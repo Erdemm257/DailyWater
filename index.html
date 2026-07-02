@@ -125,12 +125,12 @@
         .circle-amount {
             font-size: 32px;
             font-weight: 700;
-            color: #ffffff;
+            color: #ffffff; /* Litre rengi */
         }
 
         .circle-target {
             font-size: 14px;
-            color: #64748b;
+            color: #cbd5e1; /* mL rengi (Daha açık) */
             margin-top: 6px;
             letter-spacing: 1px;
             font-weight: 600;
@@ -142,7 +142,7 @@
             gap: 12px;
         }
 
-        /* --- BUTON ANİMASYONLARI BAŞLANGICI --- */
+        /* --- TEMİZLENMİŞ BUTON ANİMASYONLARI --- */
         .btn-quick {
             background-color: #111827;
             color: #94a3b8;
@@ -155,13 +155,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-            .btn-quick:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 6px 12px rgba(56, 189, 248, 0.15);
-                border-color: #38bdf8;
-                color: #38bdf8;
-            }
-
+            /* Telefonda sadece basılma efekti çalışır */
             .btn-quick:active {
                 transform: scale(0.95);
                 background-color: #1e293b;
@@ -210,10 +204,6 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-            .btn-action:hover {
-                transform: translateY(-2px);
-            }
-
             .btn-action:active {
                 transform: scale(0.95);
             }
@@ -223,21 +213,11 @@
             color: white;
         }
 
-            .btn-ekle:hover {
-                background-color: #0369a1;
-                box-shadow: 0 6px 12px rgba(2, 132, 199, 0.3);
-            }
-
         .btn-cikart {
             background-color: #334155;
             color: #f1f5f9;
             border: 1px solid #475569;
         }
-
-            .btn-cikart:hover {
-                background-color: #475569;
-                box-shadow: 0 6px 12px rgba(71, 85, 105, 0.3);
-            }
 
         .btn-save {
             background-color: #0284c7;
@@ -253,17 +233,40 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+            .btn-save:active {
+                transform: scale(0.95);
+                box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+            }
+
+        /* Hover animasyonları (sadece bilgisayar fareleri için) */
+        @media (hover: hover) {
+            .btn-quick:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px rgba(56, 189, 248, 0.15);
+                border-color: #38bdf8;
+                color: #38bdf8;
+            }
+
+            .btn-action:hover {
+                transform: translateY(-2px);
+            }
+
+            .btn-ekle:hover {
+                background-color: #0369a1;
+                box-shadow: 0 6px 12px rgba(2, 132, 199, 0.3);
+            }
+
+            .btn-cikart:hover {
+                background-color: #475569;
+                box-shadow: 0 6px 12px rgba(71, 85, 105, 0.3);
+            }
+
             .btn-save:hover {
                 transform: translateY(-4px);
                 box-shadow: 0 8px 20px rgba(2, 132, 199, 0.5);
                 background-color: #0369a1;
             }
-
-            .btn-save:active {
-                transform: scale(0.95);
-                box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
-            }
-        /* --- BUTON ANİMASYONLARI BİTİŞİ --- */
+        }
 
         .history-section {
             margin-top: 10px;
@@ -396,8 +399,8 @@
 
         <div class="btn-grid">
             <button class="btn-quick" onclick="suIslem(500, 'ekle')">500 ML</button>
-            <button class="btn-quick" onclick="suIslem(1000, 'ekle')">1.0 L</button>
-            <button class="btn-quick" onclick="suIslem(1500, 'ekle')">1.5 L</button>
+            <button class="btn-quick" onclick="suIslem(1000, 'ekle')">1000 ML</button>
+            <button class="btn-quick" onclick="suIslem(1500, 'ekle')">1500 ML</button>
         </div>
 
         <div class="custom-section">
